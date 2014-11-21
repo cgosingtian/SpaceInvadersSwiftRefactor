@@ -246,37 +246,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ShipHealthDelegate, ScoreDel
   
   // MARK: Game End Helpers
     func isGameOver() -> Bool {
-        // 1 - We check if this is nil later; if nil, no more invaders
-        let invader = self.invaderController.childNodeWithName(kInvaderName)
+        if (!self.gameEnding) {
+            // 1 - We check if this is nil later; if nil, no more invaders
+            let invader = self.invaderController.childNodeWithName(kInvaderName)
         
-        // 2
-        var invaderTooLow = false
+            // 2
+            var invaderTooLow = false
         
-        self.invaderController.enumerateChildNodesWithName(kInvaderName) {
-            node, stop in
+            self.invaderController.enumerateChildNodesWithName(kInvaderName) {
+                node, stop in
             
-            if (Float(CGRectGetMinY(node.frame)) <= self.kMinInvaderBottomHeight)   {
-                
-                invaderTooLow = true
-                stop.memory = true
+                if (Float(CGRectGetMinY(node.frame)) <= self.kMinInvaderBottomHeight)   {
+                    invaderTooLow = true
+                    stop.memory = true
+                }
             }
-        }
         
-        // 3 - Like in #1, we check if the ship is still alive
-        let ship = self.playerController.childNodeWithName(kShipName)
-        
-        if invader == nil {
-            println("INVADER NIL")
+            // 3 - Like in #1, we check if the ship is still alive
+            let ship = self.playerController.childNodeWithName(kShipName)
+    
+            return invader == nil || invaderTooLow || ship == nil
         }
-        if invaderTooLow {
-            println("INVADER TOO LOW")
-        }
-        if ship == nil {
-            println("SHIP NIL")
-        }
-        
-        // 4
-        return invader == nil || invaderTooLow || ship == nil
+        return false
     }
     
     func endGame() {

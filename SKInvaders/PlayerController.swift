@@ -95,7 +95,6 @@ class PlayerController : SKNode, ShipHealthDelegate, CanFireBullets {
                 bullet.position = CGPointMake(ship.position.x, ship.position.y + ship.frame.size.height - bullet.frame.size.height / 2)
                 
                 var maxHeight = bulletController.displayFrame.size.height - ship.position.y;
-                println("\(bulletController.displayFrame.size.height)")
                 
                 let bulletDestination = CGPointMake(ship.position.x, maxHeight + bullet.frame.size.height / 2)
                 
@@ -108,9 +107,20 @@ class PlayerController : SKNode, ShipHealthDelegate, CanFireBullets {
     
     func willChangeHealth(healthChangeValue: Float) {
         adjustShipHealthBy(healthChangeValue)
+        didChangeHealth()
     }
     
     func didChangeHealth() {
+        if let ship = childNodeWithName(kShipName) as? Ship
+        {
+            let flashWhite: SKAction = SKAction.colorizeWithColor(SKColor.redColor(), colorBlendFactor: 1.0, duration: 0.05)
+            let removeColorize: SKAction = SKAction.colorizeWithColor(SKColor.clearColor(), colorBlendFactor: 0.0, duration: 0.1)
+            let injurySequence: SKAction = SKAction.sequence([flashWhite, removeColorize])
+            
+            let actualInjuryAction: SKAction = SKAction.repeatAction(injurySequence, count: 2)
+            
+            ship.runAction(actualInjuryAction)
+        }
         return // do nothing
     }
     

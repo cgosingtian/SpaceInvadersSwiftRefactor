@@ -98,10 +98,11 @@ class Invader : SKSpriteNode, CollisionDelegate {
     
     func didCollide() {
         disablePhysics()
+        let fadeAction = SKAction.fadeAlphaTo(0.0, duration: 1.5)
         let soundAction = SKAction.playSoundFileNamed("InvaderHit.wav", waitForCompletion: false)
         let scaleAction = SKAction.scaleBy(2.0, duration: 1.0)
         
-        let deathActionGroup = SKAction.group([soundAction, scaleAction])
+        let deathActionGroup = SKAction.group([soundAction, scaleAction, fadeAction])
         
         let deathActionSequence = SKAction.sequence([[deathActionGroup], SKAction.removeFromParent()])
         
